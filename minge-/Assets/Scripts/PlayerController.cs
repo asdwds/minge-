@@ -11,6 +11,8 @@ namespace Game
         private Transform cameratf;
         private Transform modeltf;
 
+        public Team Team { get; private set; }
+
         public int MaxHP { get; private set; }
 
         public int HP { get; private set; }
@@ -36,8 +38,9 @@ namespace Game
         /// </summary>
         /// <param name="maxHP"></param>
         /// <param name="slotcount"></param>
-        public void Initialize(int maxHP, int slotcount)
+        public void Initialize(Team team, int maxHP, int slotcount)
         {
+            Team = team;
             MaxHP = maxHP;
             SlotCount = slotcount;
             ItemSlot = new List<Item>();
@@ -207,5 +210,10 @@ namespace Game
         }
 
         #endregion
+    }
+
+    public enum Team
+    {
+        Red, Blue, 
     }
 }
