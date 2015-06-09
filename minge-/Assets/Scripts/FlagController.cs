@@ -6,7 +6,7 @@ namespace Game
 {
     public class FlagController : MonoBehaviour
     {
-        public const int PPS = 10;
+        public int PPS = 10;
 
         public int RedPoint { get; private set; }
         public int BluePoint { get; private set; }
@@ -27,22 +27,25 @@ namespace Game
         {
         }
 
+        private float previousTime = 0;
         public void OnTriggerStay(Collider co)
         {
             //一秒ごとのとり方わからんかった・・・
-            if ((Time.fixedTime - (int)Time.fixedTime) <= Time.fixedDeltaTime)
+            if (Time.fixedTime - previousTime > 1)
             {
                 if (co.tag == "Player")
                 {
                     switch (co.gameObject.GetComponent<PlayerController>().Team)
                     {
                         case Team.Red:
-                            RedPoint++;
+                            RedPoint += PPS;
                             break;
                         case Team.Blue:
-                            BluePoint++;
+                            BluePoint += PPS;
                             break;
                     }
+                    previousTime = Time.fixedTime;
+                    Debug.Log("Red:" + RedPoint + ", Blue:" + BluePoint);
                 }
             }
         }
