@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Terrain
+  - Gimmick
+  - Flag
+  - Item
+  - Bullet
+  - Player
   layers:
   - Default
   - TransparentFX
