@@ -7,8 +7,8 @@ namespace Game
 {
     public class TestItem : Item
     {
-        public TestItem(int count)
-            :base(count)
+        public TestItem(int count = 5)
+            :base(count < 0 ? 5 : count)
         {
             IsNumerable = true;
             IsSelectable = true;

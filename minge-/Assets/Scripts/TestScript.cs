@@ -8,23 +8,21 @@ namespace Game
     {
         public void Awake()
         {
-            GameObject go;
-            go = Instantiate(Resources.Load<GameObject>("Prefab/Player"));
-            go.GetComponent<PlayerController>().Initialize(Team.Red, 100, 6);
-            go.name = "Player1";
-
-            go = Instantiate(Resources.Load<GameObject>("Prefab/TestItem"), new Vector3(0, 0, 10), Quaternion.identity) as GameObject;
-            go.GetComponent<ItemController>().Initialize(new TestItem(5));
         }
 
         public void Start()
         {
-
+            GameSetting.StageName = "Test";
+            GameSetting.TimeLimit = 30;
+            GameSetting.SlotCount = 10;
         }
 
         public void Update()
         {
-
+            if(Input.GetKeyDown(KeyCode.Return))
+            {
+                Application.LoadLevel("TestStage");
+            }
         }
     }
 }

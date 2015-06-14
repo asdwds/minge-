@@ -11,12 +11,14 @@ namespace Game
 
         public void Awake()
         {
+            Stage.Load(GameSetting.StageName);
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            Player1 = players[0].GetComponent<PlayerController>();
+            Player1.Initialize(GameSetting.Player1, GameSetting.SlotCount);
         }
 
         public void Start()
         {
-            Player1 = GameObject.Find("Player1").GetComponent<PlayerController>();
-            //this.Player2 = GameObject.Find("Player2").GetComponent<PlayerController>();
         }
 
         public void Update()

@@ -17,6 +17,8 @@ namespace Game
 
         public int HP { get; private set; }
 
+        public float Speed { get; private set; }
+
         public int SlotCount { get; private set; }
 
         public int SlotIndex1 { get; private set; }
@@ -38,16 +40,22 @@ namespace Game
         /// </summary>
         /// <param name="maxHP"></param>
         /// <param name="slotcount"></param>
-        public void Initialize(Team team, int maxHP, int slotcount)
+        public void Initialize(Team team, int maxHP, float speed, int slotcount)
         {
             Team = team;
             MaxHP = maxHP;
+            Speed = speed;
             SlotCount = slotcount;
             ItemSlot = new List<Item>();
             for(var i = 0;i < slotcount;i++)
             {
                 ItemSlot.Add(null);
             }
+        }
+
+        public void Initialize(GameSetting.Player setting, int slotcount)
+        {
+            Initialize(setting.Team, setting.MaxHP, setting.Speed, slotcount);
         }
 
         public void Start()
@@ -70,7 +78,7 @@ namespace Game
             float mag = Mathf.Sqrt(Mathf.Pow(vertical, 2) + Mathf.Pow(horizontal, 2));
             if (mag != 0)
             {
-                tf.position = tf.position + Quaternion.AngleAxis(-CameraPhi * Mathf.Rad2Deg, Vector3.up) * new Vector3(horizontal / mag / 10, 0, vertical / mag / 10);
+                tf.position = tf.position + Quaternion.AngleAxis(-CameraPhi * Mathf.Rad2Deg, Vector3.up) * ((Speed / 100f) * new Vector3(horizontal / mag, 0, vertical / mag));
             }
         }
 
@@ -201,12 +209,29 @@ namespace Game
 
         /// <summary>
         /// ItemSlotを、nullがListのインデックスの大きい所へ来るようにソートする
-        /// たとえば、｛Item1, Item2, null, null, Item3, null｝とかだったら
-        /// ｛Item1, Item2, Item3, null, null, null｝になってほしい
+        /// たとえば、｛Item1, Item2, Connected, null, Item3, null｝とかだったら
+        /// ｛Item1, Item2, Connected, Item3, null, null｝になってほしい
         /// </summary>
         public void AlignItems()
         {
-            ItemSlot.Sort((i, j) => (i == null ? 1 : -1) - (j == null ? 1 : -1));
+            Item[] items = new Item[ItemSlot.Count];
+            ItemSlot.CopyTo(items);
+            List<Item> list = new List<Item>(items);
+            list.RemoveAll(i => i == null || i.GetType() == typeof(ConnectedSlot));
+            for(var i = 0;i < SlotCount - 1;i++)
+            {
+                ItemSlot[i] = null;
+            }
+            int index = 0;
+            foreach(var item in list)
+            {
+                ItemSlot[index] = item;
+                for(var i = 0;i < item.Size - 1;i++)
+                {
+                    ItemSlot[index + i + 1] = new ConnectedSlot(item);
+                }
+                index += item.Size;
+            }
         }
 
         #endregion

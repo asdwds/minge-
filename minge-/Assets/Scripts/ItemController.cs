@@ -7,16 +7,19 @@ namespace Game
 {
     public class ItemController : MonoBehaviour
     {
-        public Item Item;
+        [SerializeField]
+        public Items item;
+
+        public int Count = -1;
 
         public void Awake()
         {
 
         }
 
-        public void Initialize(Item item)
+        public void Initialize(Items item)
         {
-            Item = item;
+            this.item = item;
         }
         
         public void Start()
@@ -32,7 +35,7 @@ namespace Game
         {
             if (co.gameObject.tag == "Player")
             {
-                bool b = co.gameObject.GetComponent<PlayerController>().GetItem(Item);
+                bool b = co.gameObject.GetComponent<PlayerController>().GetItem(Item.Get(item, Count));
                 if (b) Destroy(gameObject, 0.3f);
             }
         }
