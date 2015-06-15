@@ -82,6 +82,11 @@ namespace Game
             }
         }
 
+        public void Jump()
+        {
+            GetComponent<Rigidbody>().velocity = new Vector3(0, 10, 0);
+        }
+
 
         #region Camera
         #region Cameraの変数たち

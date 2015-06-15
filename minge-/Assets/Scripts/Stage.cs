@@ -29,22 +29,21 @@ namespace Game
         public List<Item> Items;
 
         public Stage()
+            :this(60, 5, new Region(-100, 100, -100, 100, 100))
         {
-            TimeLimit = 60;
-            SlotCount = 5;
+        }
+
+        public Stage(int time, int slotcount, Region region)
+        {
+            TimeLimit = time;
+            SlotCount = slotcount;
+            StageRegion = region;
 
             Players = new List<Player>();
             Terrains = new List<Terrain>();
             Gimmicks = new List<Gimmick>();
             Flags = new List<Flag>();
             Items = new List<Item>();
-        }
-
-        public Stage(int time, int slotcount)
-            :this()
-        {
-            TimeLimit = time;
-            SlotCount = slotcount;
         }
 
         #region Stageの構造物たち
@@ -104,6 +103,10 @@ namespace Game
                 PrefabName = json["PrefabName"].Get<string>();
             }
 
+            /// <summary>
+            /// StageObjectの情報からPrefabを実体化して、ステージ上に出す
+            /// </summary>
+            /// <returns>ステージ上に出したGameObject</returns>
             public GameObject Load()
             {
                 try
@@ -179,24 +182,38 @@ namespace Game
         /// </summary>
         public class Gimmick : StageObject
         {
+            public List<double> Values;
+
             public Gimmick()
                 :base()
             {
+                Values = new List<double>();
             }
 
             public Gimmick(GameObject g)
                 :base(g)
             {
+                GimmickController controller = g.GetComponent<GimmickController>();
+                Values = controller.GetValues();
             }
 
             public Gimmick(JsonNode json)
                 :base(json)
             {
+                Values = new List<double>();
+
+                Debug.Log(json["Values"].Count);
+
+                foreach (var item in json["Values"])
+                {
+                    Values.Add(item.Get<double>());
+                }
             }
 
             new public GameObject Load()
             {
                 GameObject g = base.Load();
+                g.GetComponent<GimmickController>().Initialize(Values);
                 return g;
             }
         }
@@ -255,6 +272,10 @@ namespace Game
             }
         }
 
+        /// <summary>
+        /// 範囲をあらわす
+        /// ステージの範囲をJsonに書き込むために使う
+        /// </summary>
         [System.Serializable]
         public class Region
         {
@@ -270,13 +291,28 @@ namespace Game
                 Right = 200;
                 Bottom = 0;
                 Top = 200;
-
                 Height = 100;
+            }
+
+            public Region(int left, int right, int bottom, int top, int height)
+            {
+                Left = left;
+                Right = right;
+                Bottom = bottom;
+                Top = top;
+                Height = height;
             }
         }
 
         #endregion
 
+        /// <summary>
+        /// 現在シーン上に配置されているオブジェクトをいくつかのタグごとで別のJson用オブジェクトにして、Jsonファイルに書き込む
+        /// </summary>
+        /// <param name="stagename">保存するステージの名前</param>
+        /// <param name="limit">ステージの制限時間</param>
+        /// <param name="slotcount">アイテムスロットの個数</param>
+        /// <param name="region">ステージの（行動可能）範囲</param>
         public static void Save(string stagename, int limit, int slotcount, Region region)
         {
             Stage stage = new Stage();
@@ -322,10 +358,12 @@ namespace Game
             writer.Close();
 
             Debug.Log("ステージ作った（ステージ名：" + stagename + ")");
-
-            Load(stagename);
         }
 
+        /// <summary>
+        /// 指定された名前のJsonファイルを読みに行って、その中身をステージ上に出す
+        /// </summary>
+        /// <param name="stagename"></param>
         public static void Load(string stagename)
         {
             TextAsset asset = Resources.Load("StageJson/" + stagename) as TextAsset;
