@@ -21,7 +21,7 @@ namespace Game
         {
             if(Input.GetKeyDown(KeyCode.Return))
             {
-                Application.LoadLevel("test");
+                Application.LoadLevel("TestStage");
             }
         }
     }

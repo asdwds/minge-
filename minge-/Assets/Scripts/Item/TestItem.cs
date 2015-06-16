@@ -15,7 +15,6 @@ namespace Game
             Size = 2;
         }
 
-
         public override bool Use()
         {
             Count--;

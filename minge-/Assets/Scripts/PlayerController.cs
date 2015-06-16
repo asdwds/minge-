@@ -170,6 +170,7 @@ namespace Game
                     {
                         ItemSlot[SlotCount - brank + 1 + i] = new ConnectedSlot(item);
                     }
+                    item.SetPlayer(this);
                     result = true;
                 }
             }

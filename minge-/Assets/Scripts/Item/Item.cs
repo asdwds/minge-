@@ -6,7 +6,7 @@ namespace Game
 {
     public enum Items
     {
-        None, ConnectedSlot, TestItem,
+        None, ConnectedSlot, TestItem, TestGun, 
     }
 
     public abstract class Item
@@ -30,6 +30,9 @@ namespace Game
                     break;
                 case Items.TestItem:
                     result = new TestItem(count);
+                    break;
+                case Items.TestGun:
+                    result = new TestGun(count);
                     break;
             }
 
@@ -62,7 +65,6 @@ namespace Game
             Count = count;
         }
 
-        //所持しているプレイヤーを設定
         public void SetPlayer(PlayerController player)
         {
             Player = player;

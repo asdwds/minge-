@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class GimmickController : MonoBehaviour
+namespace Game
 {
-    protected abstract void Awake();
+    public abstract class GimmickController : MonoBehaviour
+    {
+        protected abstract void Awake();
 
-    public abstract void Initialize(List<double> values);
-    public abstract List<double> GetValues();
+        public abstract void Initialize(List<double> values);
+        public abstract List<double> GetValues();
 
-    protected abstract void Start();
-    protected abstract void Update();
-
+        protected abstract void Start();
+        protected abstract void Update();
+    }
 }
