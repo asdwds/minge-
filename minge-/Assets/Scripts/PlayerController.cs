@@ -106,7 +106,7 @@ namespace Game
         public float CameraPhi
         {
             get { return cameraPhi; }
-            private set { cameraPhi = 0 < value ? (value < 2 * Mathf.PI ? value : value - 2 * Mathf.PI) : value + 2 * Mathf.PI; }
+            private set { cameraPhi = (0 < value ? (value < 2 * Mathf.PI ? value : value - 2 * Mathf.PI) : value + 2 * Mathf.PI); }
         }
         private float cameraTheta = 0.5f * Mathf.PI;
         public float CameraTheta
@@ -129,7 +129,7 @@ namespace Game
                 CameraDistance * Mathf.Sin(CameraPhi) * Mathf.Sin(CameraTheta),
                 CameraHeight + CameraDistance * Mathf.Cos(CameraTheta),
                 -1 * CameraDistance * Mathf.Cos(CameraPhi) * Mathf.Sin(CameraTheta));
-            cameratf.rotation = Quaternion.Euler(-CameraTheta * Mathf.Rad2Deg + 90, -CameraPhi * Mathf.Rad2Deg, 0);
+            cameratf.rotation = Quaternion.Euler(-CameraTheta * Mathf.Rad2Deg + 90, -CameraPhi * Mathf.Rad2Deg + tf.eulerAngles.y, 0);
         }
 
         #endregion
